@@ -1,0 +1,9 @@
+Flask
+Flask-CORS                 # Para permitir peticiones desde el Front-end
+Flask-SQLAlchemy           # Para la Base de Datos
+Flask-Bcrypt               # Para hashear contraseñas
+PyJWT                      # Para JSON Web Tokens (JWT)
+python-dotenv              # Para cargar las variables de .env
+requests                   # Para llamadas a APIs externas (ej. Spotify, Gemini)
+# Dependencias de IA (ejemplo con Google Gemini)
+google-genai
