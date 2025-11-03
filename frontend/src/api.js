@@ -1,4 +1,4 @@
-const API_URL = window.__API_URL__ || 'http://localhost:5000/api';
+const API_URL = 'https://moodsic-pp2t.onrender.com/api';
 
 export async function login(email,password){
   const r = await fetch(`${API_URL}/auth/login`, {
