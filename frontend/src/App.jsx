@@ -1,39 +1,26 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login';
-import Register from './components/Register';
-import RecommendationForm from './components/RecommendationForm';
-import NavBar from './components/NavBar';
+import { useState } from 'react';
+import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx';
+import Moods from './pages/Moods.jsx';
 
-const ProtectedRoute = ({ children }) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        return <Navigate to="/login" replace />;
-    }
-    return children;
-};
+export default function App(){
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [view, setView] = useState(token ? 'moods' : 'login');
 
-function App() {
-    return (
-        <Router>
-            <NavBar />
-            <div className="container mx-auto p-4 max-w-4xl">
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route 
-                        path="/" 
-                        element={
-                            <ProtectedRoute>
-                                <RecommendationForm />
-                            </ProtectedRoute>
-                        } 
-                    />
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-            </div>
-        </Router>
-    );
+  const handleLogin = (tok) => { localStorage.setItem('token', tok); setToken(tok); setView('moods'); }
+  const handleLogout = () => { localStorage.removeItem('token'); setToken(null); setView('login'); }
+
+  return (
+    <div className="container">
+      <h1>Moodsic 🎶</h1>
+      <div style={{marginBottom:12}}>
+        {token ? <button onClick={handleLogout}>Logout</button> : null}
+        {view==='login' && <button onClick={()=>setView('register')}>Register</button>}
+        {view!=='login' && <button onClick={()=>setView('login')}>Login</button>}
+      </div>
+      {view==='login' && <Login onLogin={handleLogin} />}
+      {view==='register' && <Register onRegistered={()=>setView('login')} />}
+      {view==='moods' && <Moods token={token} />}
+    </div>
+  )
 }
-
-export default App;

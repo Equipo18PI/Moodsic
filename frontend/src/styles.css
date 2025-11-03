@@ -1,0 +1,8 @@
+:root{
+  --bg:#0a1a1f; --card:#102830; --accent:#00f5d4; --text:#eaffff;
+}
+body{background:var(--bg);color:var(--text);font-family:Segoe UI,Roboto,system-ui;margin:0;padding:20px}
+.container{max-width:900px;margin:0 auto}
+input,textarea{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.15);color:var(--text);margin-bottom:8px}
+button{background:var(--accent);border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
+.card{background:var(--card);padding:16px;border-radius:10px}
