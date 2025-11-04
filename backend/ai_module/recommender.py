@@ -1,48 +1,28 @@
-import requests
-from google import genai
-from config import Config
+# --- Módulo de IA Falso ---
+# Esto simula ser el recomendador de IA para evitar el error de Google
+# y permitir que el servidor arranque.
 
-client = genai.Client(api_key=Config.GEMINI_API_KEY)
-
-# Función para interactuar con una API de música real (ej. Spotify, Genius)
-# Debería usar las credenciales de Spotify/Genius desde config.py
-def search_music_api(mood_keywords, music_type):
-    # En un proyecto real, esto haría llamadas a la API de Spotify
-    # para buscar canciones basadas en 'mood_keywords', 'music_type', 
-    # y 'audio_features' como 'valence' (felicidad) y 'energy'.
+# 1. Creamos una clase falsa que imita a tu recomendador real
+class FakeRecommender:
     
-    # Por simplicidad, retornaremos datos mockeados
-    if 'alegre' in mood_keywords:
-        return [
-            {"title": "Feliz Ritmo", "artist": "Artista A", "url": "#"},
-            {"title": "Bailando", "artist": "Artista B", "url": "#"}
-        ]
-    return [
-        {"title": "Canción Triste", "artist": "Artista X", "url": "#"},
-        {"title": "Melancolía", "artist": "Artista Y", "url": "#"}
-    ]
-
-def get_ai_recommendation(user_mood, music_type):
-    # 1. Análisis de Sentimiento/Generación de Keywords usando Gemini
-    prompt = (
-        f"Analiza el siguiente estado de ánimo: '{user_mood}'. "
-        f"Genera 5 palabras clave de mood y emoción separadas por comas. "
-        f"NO incluyas explicaciones. SOLO las 5 palabras clave."
-    )
-    
-    try:
-        response = client.models.generate_content(
-            model='gemini-2.5-flash',
-            contents=prompt
-        )
-        mood_keywords_str = response.text.strip()
-        mood_keywords = [k.strip().lower() for k in mood_keywords_str.split(',')]
+    # 2. Esta es la función que tu archivo 'music.py' espera que exista
+    def get_ai_recommendation(self, mood, type):
         
-    except Exception as e:
-        print(f"Error en la llamada a la API de Gemini: {e}")
-        mood_keywords = ["calma", "tranquilidad", "reflexivo"] # Fallback
+        # 3. Imprime en los logs de Render para que sepas que se está usando
+        print(f"--- IA FALSA: Recibí mood='{mood}', type='{type}' ---")
+        
+        # 4. Devuelve una lista de canciones falsas (datos de ejemplo)
+        #    Esto simula lo que haría tu función 'search_music_api'
+        if 'alegre' in mood:
+            return [
+                {"title": "Feliz Ritmo (Falso)", "artist": "Artista A", "url": "#"},
+                {"title": "Bailando (Falso)", "artist": "Artista B", "url": "#"}
+            ]
+        return [
+            {"title": "Canción Triste (Falsa)", "artist": "Artista X", "url": "#"},
+            {"title": "Melancolía (Falsa)", "artist": "Artista Y", "url": "#"}
+        ]
 
-    # 2. Búsqueda de Música usando Keywords y Tipo
-    recommendations = search_music_api(mood_keywords, music_type)
-
-    return recommendations
+# 5. Creamos la variable 'recommender' que tu archivo 'music.py'
+#    intenta importar.
+recommender = FakeRecommender()
