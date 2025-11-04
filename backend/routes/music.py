@@ -1,14 +1,14 @@
 # Importaciones necesarias
 from flask import Blueprint, jsonify, request  # Asegúrate de importar Blueprint
-# from routes.auth import token_required # <-- CAMBIO 1: Borra o comenta esta línea
-from ai_module import recommender 
+# from routes.auth import token_required # <-- Seguridad desactivada
+from ai_module import recommender # <-- Importa la IA falsa
 
 # Esta es la línea que crea el 'music_bp' antes de usarlo
 music_bp = Blueprint('music_bp', __name__)
 
 @music_bp.route('/recommend', methods=['POST'])
-# @token_required # <-- CAMBIO 2: Comenta esta línea (ponle un #)
-def get_recommendations(): # <-- CAMBIO 3: Quita 'current_user' de aquí
+# @token_required # <-- Seguridad desactivada
+def get_recommendations(): # <-- 'current_user' eliminado
     data = request.get_json()
     user_mood = data.get('mood')  # Ej: "Me siento nostálgico y pensativo"
     music_type = data.get('type') # Ej: "Acústica"
@@ -19,5 +19,5 @@ def get_recommendations(): # <-- CAMBIO 3: Quita 'current_user' de aquí
     # Llama al Módulo de IA (el falso que hicimos)
     recommendations = recommender.get_ai_recommendation(user_mood, music_type)
 
-    # <-- CAMBIO 4: Quita 'user' de la respuesta
+    # <-- Respuesta sin 'user'
     return jsonify({"recommendations": recommendations}), 200
