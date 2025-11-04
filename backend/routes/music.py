@@ -1,5 +1,12 @@
 # Importaciones necesarias (ai_module, token_required, etc.)
+from flask import Blueprint, jsonify, request  # Asegúrate de importar Blueprint
+# ... (Importa aquí tus otras dependencias como recommender, token_required, etc.)
 
+# --- LÍNEA AÑADIDA ---
+# Esta es la línea que crea el 'music_bp' antes de usarlo
+music_bp = Blueprint('music_bp', __name__)
+
+# --- TU CÓDIGO EMPIEZA AQUÍ ---
 @music_bp.route('/recommend', methods=['POST'])
 @token_required # Asegura que solo usuarios logueados puedan acceder
 def get_recommendations(current_user):
