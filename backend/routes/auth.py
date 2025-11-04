@@ -1,6 +1,14 @@
 # Importaciones necesarias (omitidas para brevedad, pero incluir: 
 # Flask, jsonify, request, User, db, bcrypt, jwt, datetime)
 
+# Asegúrate de que Blueprint esté importado
+from flask import Blueprint, jsonify, request 
+# (y cualquier otra cosa que necesites de Flask)
+
+# Esta es la línea que crea el 'auth_bp' antes de usarlo
+auth_bp = Blueprint('auth_bp', __name__)
+
+
 def generate_token(user_id):
     # Lógica para generar un JWT con la ID del usuario y fecha de expiración
     # Retorna el token
