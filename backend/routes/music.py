@@ -1,5 +1,6 @@
 # Importaciones necesarias (ai_module, token_required, etc.)
 from flask import Blueprint, jsonify, request  # Asegúrate de importar Blueprint
+from .auth import token_required
 # ... (Importa aquí tus otras dependencias como recommender, token_required, etc.)
 
 # --- LÍNEA AÑADIDA ---
