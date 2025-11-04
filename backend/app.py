@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_cors import CORS
 from config import Config
@@ -7,6 +8,11 @@ from routes.music import music_bp # Importa los Blueprints
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# Sobrescribir la DB URI si estamos en producción (Render)
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 
 # Inicializar extensiones
 db.init_app(app)
