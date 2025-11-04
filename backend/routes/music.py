@@ -1,7 +1,7 @@
 # Importaciones necesarias
 from flask import Blueprint, jsonify, request  # Asegúrate de importar Blueprint
 # from routes.auth import token_required # <-- Seguridad desactivada
-from ai_module import recommender # <-- Importa la IA falsa
+from ai_module_recommender.py import recommender.py # <-- Importa la IA falsa
 
 # Esta es la línea que crea el 'music_bp' antes de usarlo
 music_bp = Blueprint('music_bp', __name__)
