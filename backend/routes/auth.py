@@ -1,38 +1,26 @@
-# Importaciones necesarias (omitidas para brevedad, pero incluir: 
-# Flask, jsonify, request, User, db, bcrypt, jwt, datetime)
+# Importaciones necesarias (ai_module, token_required, etc.)
+from flask import Blueprint, jsonify, request  # Asegúrate de importar Blueprint
+from .auth import token_required
+# ... (Importa aquí tus otras dependencias como recommender, token_required, etc.)
 
-# Asegúrate de que Blueprint esté importado
-from flask import Blueprint, jsonify, request 
-# (y cualquier otra cosa que necesites de Flask)
+# --- LÍNEA AÑADIDA ---
+# Esta es la línea que crea el 'music_bp' antes de usarlo
+music_bp = Blueprint('music_bp', __name__)
 
-# Esta es la línea que crea el 'auth_bp' antes de usarlo
-auth_bp = Blueprint('auth_bp', __name__)
-
-
-def generate_token(user_id):
-    # Lógica para generar un JWT con la ID del usuario y fecha de expiración
-    # Retorna el token
-    pass 
-
-@auth_bp.route('/register', methods=['POST'])
-def register():
+# --- TU CÓDIGO EMPIEZA AQUÍ ---
+@music_bp.route('/recommend', methods=['POST'])
+# @token_required # <--- CAMBIO 1: Desactivado temporalmente
+def get_recommendations(): # <--- CAMBIO 2: Se quitó 'current_user'
     data = request.get_json()
-    # 1. Validar que el usuario no exista
-    # 2. Crear instancia de User y hashear la contraseña
-    # 3. Guardar en la DB
-    return jsonify({"message": "Usuario registrado exitosamente"}), 201
+    user_mood = data.get('mood')  # Ej: "Me siento nostálgico y pensativo"
+    music_type = data.get('type') # Ej: "Acústica"
 
-@auth_bp.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    # 1. Buscar usuario por email/username
-    # 2. Verificar la contraseña con bcrypt.check_password()
-    # 3. Si es correcto, generar un JWT
-    # 4. Retornar el token al Front-end
-    return jsonify({"token": "tu_jwt_aqui"}), 200
+    if not user_mood or not music_type:
+        return jsonify({"error": "Faltan datos de mood o tipo de música"}), 400
 
-# Decorador de ayuda para proteger rutas
-def token_required(f):
-    # Lógica para verificar el JWT en el encabezado de la petición
-    # Si es válido, pasa la función 'f' con el usuario decodificado
-    pass
+    # Llama al Módulo de IA
+    # ¡Asegúrate de que 'recommender' esté importado arriba!
+    recommendations = recommender.get_ai_recommendation(user_mood, music_type)
+
+    # <--- CAMBIO 3: Se quitó 'user' de la respuesta
+    return jsonify({"recommendations": recommendations}), 200
