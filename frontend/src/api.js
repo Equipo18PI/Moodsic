@@ -19,13 +19,15 @@ export async function register(name,email,password){
 }
 
 export async function analyze(text, token){
-  const r = await fetch(`${API_URL}/moods/analyze`, {
+  
+  // Arregla la URL para que coincida con tu backend
+  const r = await fetch(`${API_URL}/music/recommend`, { // <-- CAMBIO DE RUTA
     method:'POST',
     headers:{
-      'Content-Type':'application/json',
-      'Authorization': `Bearer ${token}`
+      'Content-Type':'application/json'
     },
-    body: JSON.stringify({ text })
+    // Envía 'mood' y 'type' como espera tu backend
+    body: JSON.stringify({ mood: text, type: 'default' }) // <-- CAMBIO DE BODY
   });
   return r.json();
 }
