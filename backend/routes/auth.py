@@ -1,6 +1,6 @@
 # Importaciones necesarias (ASEGÚRATE DE AÑADIR ESTAS)
 from flask import Blueprint, jsonify, request, current_app
-from ..models import User, db, bcrypt # Asumo que 'models' está en el mismo nivel
+from models import User, db, bcrypt
 import jwt
 import datetime
 from functools import wraps
