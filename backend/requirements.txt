@@ -8,3 +8,4 @@ requests                   # Para llamadas a APIs externas (ej. Spotify, Gemini)
 # Dependencias de IA (ejemplo con Google Gemini)
 google-genai
 psycopg2-binary
+PyJWT
