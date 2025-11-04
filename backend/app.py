@@ -17,7 +17,12 @@ if database_url:
 # Inicializar extensiones
 db.init_app(app)
 bcrypt.init_app(app)
-CORS(app) # Habilita CORS para el Front-end
+# Habilita CORS para el Front-end (ahora con la URL específica)
+CORS(app, resources={
+    r"/api/*": {
+        "origins": "https://moodsic-frontend.onrender.com"
+    }
+})
 
 # Registrar Blueprints (grupos de rutas)
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
