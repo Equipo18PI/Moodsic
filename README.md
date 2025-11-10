@@ -1,22 +1,28 @@
-# Moodsic
-Proyecto de musica segun tu busqueda
-🎶 Moodsic: Tu IA Personal de Recomendación Musical por Estado de Ánimo
-Moodsic es una aplicación que combina el poder de la Inteligencia Artificial y el procesamiento de lenguaje natural (NLP) para crear listas de reproducción personalizadas. Simplemente describe cómo te sientes y qué estilo de música deseas, y nuestra IA buscará canciones cuyas letras y ritmos se alineen perfectamente con tu estado de ánimo.
+Moodsic (no-auth) - Minimal version
 
-🌟 Características Principales
-Recomendación Inteligente: Utiliza un modelo de IA para analizar el sentimiento y el tema del texto ingresado por el usuario.
+This package includes a minimal backend (Node/Express) and a simple frontend (single HTML file).
+The app removed login/registration: users can directly interact with the AI (keyword-based analyzer).
 
-Filtrado por Mood y Género: Ofrece sugerencias musicales que coinciden tanto con el estado emocional (letras) como con el tipo de música (ritmo/género) deseado.
+How to run locally:
 
-Autenticación de Usuario: Control de acceso al sistema (log in) para una experiencia personalizada.
+1) Backend:
+   cd backend
+   npm install
+   npm start
+   Backend will run on http://localhost:5000 by default
 
-Arquitectura Moderna: Separación clara entre Front-end (React/Vue), Back-end (Python/Node.js) y el Módulo de IA.
+2) Frontend:
+   Open frontend/index.html in your browser (or serve it with a static server).
+   The frontend assumes the backend is at the same origin under /api; if you run backend on localhost:5000,
+   change the line in the HTML:
+     const API_URL = (window.__API_URL__ || "") || (location.origin) + "/api";
+   to:
+     const API_URL = "http://localhost:5000/api";
 
-🛠️ Arquitectura del Proyecto
-El proyecto está dividido en tres componentes principales:
+Deployment on Render:
+ - Create a Web Service that points to backend directory.
+ - Build command: npm install
+ - Start command: npm start
+ - For the frontend, you can either host it as a Static Site (root: frontend, publish dir: .) or serve from backend by copying the HTML to backend/public.
 
-Front-end: Desarrollado con [Mencionar Tecnología: Ej. React] y desplegado en Render como Static Site.
-
-Back-end (API): Desarrollado con [Mencionar Tecnología: Ej. Python/Flask] y desplegado en Render como Web Service. Maneja la autenticación y actúa como intermediario con la IA.
-
-Módulo de IA: Se ejecuta dentro del Back-end, utilizando [Mencionar Tecnología: Ej. una API de LLM o librerías de NLP como NLTK] para el análisis de sentimiento.
+Note: This is a demo AI (keyword based). For production you can replace the analyzer function with calls to an external AI service (OpenAI, Google GenAI), using environment variables for keys.

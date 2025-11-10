@@ -1,22 +1,13 @@
 {
-  "name": "moodsic-backend",
+  "name": "moodsic-backend-noauth",
   "version": "1.0.0",
-  "main": "index.js",
   "type": "module",
+  "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node index.js"
   },
   "dependencies": {
-    "axios": "^1.6.2",
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
-    "pg": "^8.11.3"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.2"
+    "cors": "^2.8.5"
   }
 }
