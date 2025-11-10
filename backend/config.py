@@ -15,3 +15,6 @@ class Config:
     GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
     SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
     SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
+
+    #aver jala
+    
