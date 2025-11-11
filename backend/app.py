@@ -1,65 +1,92 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify, render_template_string, url_for
 from flask_cors import CORS
-from dotenv import load_dotenv
-from openai import OpenAI
 import os
+from dotenv import load_dotenv
 
+# Importaciones de Google Gemini
+from google import genai
+from google.genai.errors import APIError 
+
+# Cargar variables de entorno
 load_dotenv()
 
-app = Flask(__name__, static_folder="static", template_folder="templates")  # 👈 ESTA VARIABLE DEBE LLAMARSE app
+app = Flask(__name__)
 CORS(app)
 
-# Inicializa el cliente de OpenAI usando la API Key
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-if not OPENAI_API_KEY:
-    app.logger.warning("⚠️ No se ha configurado la clave OPENAI_API_KEY.")
-client = OpenAI(api_key=OPENAI_API_KEY)
+# Configuración de Google Gemini
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") 
+GEMINI_MODEL = "gemini-2.5-flash" 
 
 
+# HTML SIMPLIFICADO Y LIMPIO: Usa url_for para enlazar CSS y JS
+HTML_PAGE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodsic AI Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Moodsic AI Chat 🎵</div>
+        <div class="chat-body" id="chat-body">
+            <div class="message bot">Hola! Soy tu Moodsic AI — lista para recomendarte música.</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Escribe tu mensaje..." />
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
+"""
+
+# Página principal
 @app.route("/")
-def index():
-    """Carga la interfaz principal del chat."""
-    return render_template("index.html")
+def home():
+    # Flask sirve el HTML y resuelve la ruta de los archivos estáticos
+    return render_template_string(HTML_PAGE)
 
 
+# Endpoint del chat
 @app.route("/api/chat", methods=["POST"])
 def chat():
-    """Recibe un mensaje del usuario, analiza su estado de ánimo y recomienda canciones."""
+    # 1. Verificación de la clave API
+    if not GEMINI_API_KEY:
+        return jsonify({"error": "Error: GEMINI_API_KEY no configurada. Por favor, revisa el archivo .env."}), 500
+
     data = request.get_json()
-    message = data.get("message", "").strip()
+    message = data.get("message", "")
 
     if not message:
-        return jsonify({"error": "Empty message"}), 400
-    if not OPENAI_API_KEY:
-        return jsonify({"error": "API key not configured"}), 500
+        return jsonify({"error": "No message provided"}), 400
 
-    # Mensaje de sistema que define el rol del asistente
-    system_prompt = (
-        "You are Moodsic, an empathetic assistant who analyzes the user's message "
-        "to determine their emotional state (mood) and recommends from 5 up to 10 songs that match it. "
-        "Respond with a short summary including the mood, an explanation, and song titles."
-    )
-
+    # 2. Instrucción del sistema para definir el rol del bot
+    system_instruction = "You are Moodsic AI, a friendly and helpful assistant that recommends music based on mood. Respond kindly and briefly in Spanish."
+    
     try:
-        # Llamada a la API de OpenAI
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",  # puedes cambiar a "gpt-4-turbo" si lo prefieres
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": message},
-            ],
-            temperature=0.8,
-            max_tokens=250,
-        )
+        # 3. Llamar al modelo Gemini
+        client = genai.Client(api_key=GEMINI_API_KEY)
 
-        reply = response.choices[0].message.content.strip()
+        response = client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=message,
+            config={"system_instruction": system_instruction}
+        )
+        
+        reply = response.text.strip()
         return jsonify({"reply": reply})
 
+    except APIError as e:
+        print(f"Gemini API Error: {e}")
+        return jsonify({"error": f"Error de la API de Gemini: {e}"}), 500
     except Exception as e:
-        app.logger.exception("Error al contactar con OpenAI:")
-        return jsonify({"error": str(e)}), 500
+        print(f"Unexpected Error: {e}")
+        return jsonify({"error": f"Ocurrió un error inesperado: {e}"}), 500
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
